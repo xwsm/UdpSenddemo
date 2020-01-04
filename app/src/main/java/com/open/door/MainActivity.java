@@ -37,7 +37,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendUdpMessage() {
-        String message = "48 3a 01 70 01 01 00 02 45 44";
+        //48 3a 01 70 01 01 00 02 45 44
+        String message2 = "H:\u0001p\u0001\u0001\u0000\u0002ED";
+        String message=hexStringToString("48 3a 01 70 01 01 00 02 45 44");
         new Thread(() -> {
             try {
                 DatagramSocket dgSocket = new DatagramSocket();
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(MainActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "开门成功", Toast.LENGTH_SHORT).show();
                     }
                 });
                 System.out.println("send message is ok.");
@@ -58,5 +60,30 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
-
+    /**
+     * 16进制转换成为string类型字符串
+     * @param s
+     * @return
+     */
+    public String hexStringToString(String s) {
+        if (s == null || s.equals("")) {
+            return null;
+        }
+        s = s.replace(" ", "");
+        byte[] baKeyword = new byte[s.length() / 2];
+        for (int i = 0; i < baKeyword.length; i++) {
+            try {
+                baKeyword[i] = (byte) (0xff & Integer.parseInt(s.substring(i * 2, i * 2 + 2), 16));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            s = new String(baKeyword, "UTF-8");
+            new String();
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return s;
+    }
 }
